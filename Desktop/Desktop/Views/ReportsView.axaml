@@ -32,10 +32,17 @@
             </StackPanel>
 
             <Border BorderThickness="0,1,0,0" BorderBrush="#E9ECEF" Padding="0,16,0,0" Margin="0,8,0,0">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="12">
                     <Button Content="Экспорт в Excel" Command="{Binding ExportToExcelCommand}" Classes="Primary" Width="160"/>
                 </StackPanel>
             </Border>
+
+            <!-- Блок отображения ошибок -->
+            <TextBlock Text="{Binding ErrorMessage}"
+                       Foreground="#D83B01"
+                       FontWeight="500"
+                       HorizontalAlignment="Center"
+                       IsVisible="{Binding ErrorMessage, Converter={x:Static ObjectConverters.IsNotNull}}"/>
         </StackPanel>
     </Border>
 </UserControl>

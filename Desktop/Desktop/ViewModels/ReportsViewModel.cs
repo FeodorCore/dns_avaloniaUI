@@ -12,10 +12,10 @@ namespace Desktop.ViewModels;
 
 public partial class ReportsViewModel : ViewModelBase
 {
-    [ObservableProperty] private string _selectedReport = "Продажи по дням";
+    [ObservableProperty] private string _selectedReport = "Товары на складе";
+    [ObservableProperty] private string? _errorMessage;
 
     private DateTimeOffset? _dateFrom = DateTime.Today.AddMonths(-1);
-
     public DateTimeOffset? DateFrom
     {
         get => _dateFrom;
@@ -23,7 +23,6 @@ public partial class ReportsViewModel : ViewModelBase
     }
 
     private DateTimeOffset? _dateTo = DateTime.Today;
-
     public DateTimeOffset? DateTo
     {
         get => _dateTo;
@@ -75,9 +74,30 @@ public partial class ReportsViewModel : ViewModelBase
     [RelayCommand]
     private async Task ExportToExcelAsync()
     {
-        var table = await GenerateDataTableAsync();
-        if (table == null || table.Rows.Count == 0)
+        ErrorMessage = null;
+        DataTable? table = null;
+
+        try
+        {
+            table = await GenerateDataTableAsync();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Ошибка формирования отчёта: {ex.Message}";
             return;
+        }
+
+        if (table == null)
+        {
+            ErrorMessage = "Не удалось сформировать отчёт.";
+            return;
+        }
+
+        if (table.Rows.Count == 0)
+        {
+            ErrorMessage = "Нет данных для выбранного периода / категории.";
+            return;
+        }
 
         var window = App.Current?.ApplicationLifetime is
             Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
