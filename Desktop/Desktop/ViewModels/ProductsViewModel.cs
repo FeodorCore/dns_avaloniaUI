@@ -33,13 +33,12 @@ public partial class ProductsViewModel : ViewModelBase
     [RelayCommand]
     private async Task AddAsync()
     {
-        // Убедимся, что есть хотя бы одна категория
         if (Categories.Count == 0)
-            return; // или показать сообщение пользователю
+            return; 
 
         var product = new Product 
         { 
-            Name = "",                // позже пользователь впишет имя
+            Name = "",                
             CurrentPrice = 0, 
             StockQuantity = 0, 
             CategoryId = Categories.First().CategoryId 
@@ -63,13 +62,9 @@ public partial class ProductsViewModel : ViewModelBase
     {
         if (SelectedProduct is null) return;
         await DatabaseService.Instance.UpdateProductAsync(SelectedProduct);
-        // Update the display name if category changed
         var cat = Categories.FirstOrDefault(c => c.CategoryId == SelectedProduct.CategoryId);
         if (cat != null) SelectedProduct.CategoryName = cat.Name;
-        // Refresh list item
         var index = Products.IndexOf(SelectedProduct);
         if (index >= 0) Products[index] = SelectedProduct;
     }
-
-    // When product selection changes, no need for extra action
 }

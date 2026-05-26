@@ -29,7 +29,6 @@ public partial class SuppliesViewModel : ViewModelBase
         }
     }
 
-    // DateTimeOffset? для DatePicker
     public DateTimeOffset? SupplyDate
     {
         get => CurrentSupply?.SupplyDate;
@@ -62,7 +61,7 @@ public partial class SuppliesViewModel : ViewModelBase
     public decimal OverallTotal => Items.Sum(i => i.Total);
 
     [ObservableProperty]
-    private string? _errorMessage;  // Сообщение об ошибке
+    private string? _errorMessage; 
 
     public SuppliesViewModel() => _ = InitializeAsync();
 
@@ -81,7 +80,7 @@ public partial class SuppliesViewModel : ViewModelBase
         newItem.PropertyChanged += (_, _) => OnPropertyChanged(nameof(OverallTotal));
         Items.Add(newItem);
         OnPropertyChanged(nameof(OverallTotal));
-        ErrorMessage = null; // Сбросить ошибку при изменении
+        ErrorMessage = null; 
     }
 
     [RelayCommand]
@@ -97,14 +96,12 @@ public partial class SuppliesViewModel : ViewModelBase
     [RelayCommand]
     private async Task SaveSupplyAsync()
     {
-        // 1. Проверка выбора поставщика
         if (SupplierId == 0)
         {
             ErrorMessage = "Выберите поставщика.";
             return;
         }
-
-        // 2. Проверка наличия позиций
+        
         if (Items.Count == 0)
         {
             ErrorMessage = "Добавьте хотя бы одну позицию в поставку.";
@@ -131,7 +128,6 @@ public partial class SuppliesViewModel : ViewModelBase
             }
         }
 
-        // Если всё ок – сохраняем
         if (CurrentSupply is null) return;
 
         var db = DatabaseService.Instance;
@@ -145,12 +141,11 @@ public partial class SuppliesViewModel : ViewModelBase
         CurrentSupply.TotalCost = OverallTotal;
         await db.SaveSupplyAsync(CurrentSupply, itemsToSave);
 
-        // Очищаем форму после успешного сохранения
         Items.Clear();
         CurrentSupply = new Supply { SupplyDate = DateTime.Today };
         OnPropertyChanged(nameof(SupplyDate));
         OnPropertyChanged(nameof(SupplierId));
         OnPropertyChanged(nameof(OverallTotal));
-        ErrorMessage = null; // Убираем сообщение об ошибке
+        ErrorMessage = null; 
     }
 }

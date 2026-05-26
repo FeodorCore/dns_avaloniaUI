@@ -176,70 +176,7 @@ public class DatabaseService
         await cmd.ExecuteNonQueryAsync();
     }
 
-    // ========== Поставки ==========
-    public async Task<List<Supply>> GetSuppliesAsync()
-    {
-        var list = new List<Supply>();
-        await using var conn = CreateConnection();
-        await conn.OpenAsync();
-        await using var cmd = new NpgsqlCommand(
-            "SELECT supply_id, supplier_id, supply_date, total_cost FROM supply ORDER BY supply_date DESC", conn);
-        await using var reader = await cmd.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
-            list.Add(new Supply
-            {
-                SupplyId = reader.GetInt32(0),
-                SupplierId = reader.GetInt32(1),
-                SupplyDate = reader.GetDateTime(2),
-                TotalCost = reader.GetDecimal(3)
-            });
-        return list;
-    }
-
-    public async Task<Supply?> GetSupplyByIdAsync(int id)
-    {
-        await using var conn = CreateConnection();
-        await conn.OpenAsync();
-        await using var cmd = new NpgsqlCommand(
-            "SELECT supply_id, supplier_id, supply_date, total_cost FROM supply WHERE supply_id=@p1", conn);
-        cmd.Parameters.AddWithValue("p1", id);
-        await using var reader = await cmd.ExecuteReaderAsync();
-        if (!await reader.ReadAsync()) return null;
-        var supply = new Supply
-        {
-            SupplyId = reader.GetInt32(0),
-            SupplierId = reader.GetInt32(1),
-            SupplyDate = reader.GetDateTime(2),
-            TotalCost = reader.GetDecimal(3)
-        };
-        reader.Close();
-        supply.Items = await GetSupplyItemsAsync(id);
-        return supply;
-    }
-
-    public async Task<List<SupplyItem>> GetSupplyItemsAsync(int supplyId)
-    {
-        var items = new List<SupplyItem>();
-        await using var conn = CreateConnection();
-        await conn.OpenAsync();
-        await using var cmd = new NpgsqlCommand(
-            @"SELECT si.supply_item_id, si.product_id, si.quantity, si.unit_purchase_price, p.name
-              FROM supply_item si JOIN product p ON si.product_id = p.product_id
-              WHERE si.supply_id = @p1", conn);
-        cmd.Parameters.AddWithValue("p1", supplyId);
-        await using var reader = await cmd.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
-            items.Add(new SupplyItem
-            {
-                SupplyItemId = reader.GetInt32(0),
-                ProductId = reader.GetInt32(1),
-                Quantity = reader.GetInt32(2),
-                UnitPurchasePrice = reader.GetDecimal(3),
-                ProductName = reader.GetString(4)
-            });
-        return items;
-    }
-
+    // ========== Поставки (только сохранение, без выборки) ==========
     public async Task SaveSupplyAsync(Supply supply, List<SupplyItem> items)
     {
         await using var conn = CreateConnection();
@@ -297,70 +234,7 @@ public class DatabaseService
             throw;
         }
     }
-
-    // ========== Продажи ==========
-    public async Task<List<Sale>> GetSalesAsync()
-    {
-        var list = new List<Sale>();
-        await using var conn = CreateConnection();
-        await conn.OpenAsync();
-        await using var cmd = new NpgsqlCommand(
-            "SELECT sale_id, sale_datetime, total_amount FROM sale ORDER BY sale_datetime DESC", conn);
-        await using var reader = await cmd.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
-            list.Add(new Sale
-            {
-                SaleId = reader.GetInt32(0),
-                SaleDatetime = reader.GetDateTime(1),
-                TotalAmount = reader.GetDecimal(2)
-            });
-        return list;
-    }
-
-    public async Task<Sale?> GetSaleByIdAsync(int id)
-    {
-        await using var conn = CreateConnection();
-        await conn.OpenAsync();
-        await using var cmd = new NpgsqlCommand(
-            "SELECT sale_id, sale_datetime, total_amount FROM sale WHERE sale_id=@p1", conn);
-        cmd.Parameters.AddWithValue("p1", id);
-        await using var reader = await cmd.ExecuteReaderAsync();
-        if (!await reader.ReadAsync()) return null;
-        var sale = new Sale
-        {
-            SaleId = reader.GetInt32(0),
-            SaleDatetime = reader.GetDateTime(1),
-            TotalAmount = reader.GetDecimal(2)
-        };
-        reader.Close();
-        sale.Items = await GetSaleItemsAsync(id);
-        return sale;
-    }
-
-    public async Task<List<SaleItem>> GetSaleItemsAsync(int saleId)
-    {
-        var items = new List<SaleItem>();
-        await using var conn = CreateConnection();
-        await conn.OpenAsync();
-        await using var cmd = new NpgsqlCommand(
-            @"SELECT si.sale_item_id, si.product_id, si.quantity, si.unit_sale_price, si.unit_cost_price, p.name
-              FROM sale_item si JOIN product p ON si.product_id = p.product_id
-              WHERE si.sale_id = @p1", conn);
-        cmd.Parameters.AddWithValue("p1", saleId);
-        await using var reader = await cmd.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
-            items.Add(new SaleItem
-            {
-                SaleItemId = reader.GetInt32(0),
-                ProductId = reader.GetInt32(1),
-                Quantity = reader.GetInt32(2),
-                UnitSalePrice = reader.GetDecimal(3),
-                UnitCostPrice = reader.GetDecimal(4),
-                ProductName = reader.GetString(5)
-            });
-        return items;
-    }
-
+    
     public async Task SaveSaleAsync(Sale sale, List<SaleItem> items)
     {
         await using var conn = CreateConnection();
@@ -444,7 +318,7 @@ public class DatabaseService
         return result is not null and not DBNull ? Convert.ToInt32(result) : 0;
     }
 
-    // ========== Отчёты (исправленные русские названия) ==========
+    // ========== Отчёты ==========
     public async Task<DataTable> GetStockReportAsync()
     {
         var dt = new DataTable();

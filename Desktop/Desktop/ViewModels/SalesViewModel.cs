@@ -91,7 +91,6 @@ public partial class SalesViewModel : ViewModelBase
     [RelayCommand]
     private async Task SaveSaleAsync()
     {
-        // 1. Проверка наличия позиций
         if (Items.Count == 0)
         {
             ErrorMessage = "Добавьте хотя бы одну позицию в продажу.";
@@ -99,8 +98,7 @@ public partial class SalesViewModel : ViewModelBase
         }
 
         var db = DatabaseService.Instance;
-
-        // 2. Валидация каждой позиции и проверка остатков
+        
         foreach (var item in Items)
         {
             if (item.ProductId == 0)
@@ -141,8 +139,7 @@ public partial class SalesViewModel : ViewModelBase
 
         CurrentSale.TotalAmount = OverallTotal;
         await db.SaveSaleAsync(CurrentSale, itemsToSave);
-
-        // Очищаем форму после успешного сохранения
+        
         Items.Clear();
         CurrentSale = new Sale { SaleDatetime = DateTime.Now };
         OnPropertyChanged(nameof(SaleDatetime));

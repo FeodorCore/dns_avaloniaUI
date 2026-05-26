@@ -4,31 +4,42 @@
              x:Class="Desktop.Views.SuppliersView"
              x:DataType="vm:SuppliersViewModel">
     <Grid ColumnDefinitions="320, *" ColumnSpacing="24">
+        <!-- Левая часть: Список поставщиков -->
         <Border Grid.Column="0" Background="#FFFFFF" CornerRadius="12" BorderBrush="#E9ECEF" BorderThickness="1" Padding="16">
             <ListBox ItemsSource="{Binding Suppliers}"
                      SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}"
                      DisplayMemberBinding="{Binding Name}"/>
         </Border>
-
+        
+        <!-- Правая часть: Форма редактирования -->
         <Border Grid.Column="1" Background="#FFFFFF" CornerRadius="12" BorderBrush="#E9ECEF" BorderThickness="1" Padding="24">
             <StackPanel Spacing="18">
                 <TextBlock Classes="Header" Text="Редактирование поставщика"/>
-                <StackPanel>
-                    <TextBlock Classes="Label" Text="Название"/>
-                    <TextBox Text="{Binding SelectedSupplier.Name, Mode=TwoWay}" Watermark="Название компании"/>
+                
+                <!-- Все поля ввода блокируются одним свойством IsEnabled -->
+                <StackPanel Spacing="18" IsEnabled="{Binding SelectedSupplier, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    <StackPanel>
+                        <TextBlock Classes="Label" Text="Название"/>
+                        <TextBox Text="{Binding SelectedSupplier.Name, Mode=TwoWay}" Watermark="Название компании"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Classes="Label" Text="Телефон"/>
+                        <TextBox Text="{Binding SelectedSupplier.Phone, Mode=TwoWay}" Watermark="+7 (XXX) XXX-XX-XX"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Classes="Label" Text="Email"/>
+                        <TextBox Text="{Binding SelectedSupplier.Email, Mode=TwoWay}" Watermark="email@example.com"/>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel>
-                    <TextBlock Classes="Label" Text="Телефон"/>
-                    <TextBox Text="{Binding SelectedSupplier.Phone, Mode=TwoWay}" Watermark="+7 (XXX) XXX-XX-XX"/>
-                </StackPanel>
-                <StackPanel>
-                    <TextBlock Classes="Label" Text="Email"/>
-                    <TextBox Text="{Binding SelectedSupplier.Email, Mode=TwoWay}" Watermark="email@example.com"/>
-                </StackPanel>
+                
+                <!-- Кнопки действий -->
                 <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,24,0,0">
                     <Button Content="Добавить" Command="{Binding AddCommand}" Classes="Primary"/>
-                    <Button Content="Сохранить" Command="{Binding SaveCommand}" Classes="Primary"/>
-                    <Button Content="Удалить" Command="{Binding DeleteCommand}" Classes="Danger" Margin="12,0,0,0"/>
+                    
+                    <Button Content="Сохранить" Command="{Binding SaveCommand}" Classes="Primary" 
+                            IsEnabled="{Binding SelectedSupplier, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                    <Button Content="Удалить" Command="{Binding DeleteCommand}" Classes="Danger" Margin="12,0,0,0" 
+                            IsEnabled="{Binding SelectedSupplier, Converter={x:Static ObjectConverters.IsNotNull}}"/>
                 </StackPanel>
             </StackPanel>
         </Border>
