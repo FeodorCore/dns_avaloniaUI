@@ -11,13 +11,12 @@ namespace Desktop.ViewModels;
 
 public partial class SuppliesViewModel : ViewModelBase
 {
-    [ObservableProperty]
-    private ObservableCollection<Supplier> _suppliers = new();
+    [ObservableProperty] private ObservableCollection<Supplier> _suppliers = new();
 
-    [ObservableProperty]
-    private ObservableCollection<Product> _products = new();
+    [ObservableProperty] private ObservableCollection<Product> _products = new();
 
     private Supply? _currentSupply;
+
     public Supply? CurrentSupply
     {
         get => _currentSupply;
@@ -55,13 +54,11 @@ public partial class SuppliesViewModel : ViewModelBase
         }
     }
 
-    [ObservableProperty]
-    private ObservableCollection<SupplyItemViewModel> _items = new();
+    [ObservableProperty] private ObservableCollection<SupplyItemViewModel> _items = new();
 
     public decimal OverallTotal => Items.Sum(i => i.Total);
 
-    [ObservableProperty]
-    private string? _errorMessage; 
+    [ObservableProperty] private string? _errorMessage;
 
     public SuppliesViewModel() => _ = InitializeAsync();
 
@@ -80,7 +77,7 @@ public partial class SuppliesViewModel : ViewModelBase
         newItem.PropertyChanged += (_, _) => OnPropertyChanged(nameof(OverallTotal));
         Items.Add(newItem);
         OnPropertyChanged(nameof(OverallTotal));
-        ErrorMessage = null; 
+        ErrorMessage = null;
     }
 
     [RelayCommand]
@@ -101,7 +98,7 @@ public partial class SuppliesViewModel : ViewModelBase
             ErrorMessage = "Выберите поставщика.";
             return;
         }
-        
+
         if (Items.Count == 0)
         {
             ErrorMessage = "Добавьте хотя бы одну позицию в поставку.";
@@ -116,11 +113,13 @@ public partial class SuppliesViewModel : ViewModelBase
                 ErrorMessage = "Для каждой позиции выберите товар.";
                 return;
             }
+
             if (item.Quantity <= 0)
             {
                 ErrorMessage = "Количество товара должно быть больше нуля.";
                 return;
             }
+
             if (item.UnitPurchasePrice <= 0)
             {
                 ErrorMessage = "Цена закупки должна быть больше нуля.";
@@ -146,6 +145,6 @@ public partial class SuppliesViewModel : ViewModelBase
         OnPropertyChanged(nameof(SupplyDate));
         OnPropertyChanged(nameof(SupplierId));
         OnPropertyChanged(nameof(OverallTotal));
-        ErrorMessage = null; 
+        ErrorMessage = null;
     }
 }

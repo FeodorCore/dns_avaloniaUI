@@ -9,10 +9,8 @@ namespace Desktop.ViewModels;
 
 public partial class CategoriesViewModel : ViewModelBase
 {
-    [ObservableProperty]
-    private ObservableCollection<Category> _categories = new();
-    [ObservableProperty]
-    private Category? _selectedCategory;
+    [ObservableProperty] private ObservableCollection<Category> _categories = new();
+    [ObservableProperty] private Category? _selectedCategory;
 
     public CategoriesViewModel() => _ = LoadAsync();
 

@@ -4,20 +4,15 @@ namespace Desktop.ViewModels;
 
 public partial class SaleItemViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private int _productId;
+    [ObservableProperty] private int _productId;
 
-    [ObservableProperty]
-    private string? _productName;
+    [ObservableProperty] private string? _productName;
 
-    [ObservableProperty]
-    private int _quantity;
+    [ObservableProperty] private int _quantity;
 
-    [ObservableProperty]
-    private decimal _unitSalePrice;
+    [ObservableProperty] private decimal _unitSalePrice;
 
-    [ObservableProperty]
-    private decimal _unitCostPrice;
+    [ObservableProperty] private decimal _unitCostPrice;
 
     public decimal Total => Quantity * UnitSalePrice;
 

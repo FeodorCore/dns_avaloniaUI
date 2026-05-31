@@ -33,7 +33,7 @@ public partial class MainWindowViewModel : ViewModelBase
         if (value is not null)
         {
             CurrentTitle = value.Title;
-            
+
             if (value.ViewModelType is not null)
             {
                 CurrentView = (ViewModelBase)Activator.CreateInstance(value.ViewModelType)!;

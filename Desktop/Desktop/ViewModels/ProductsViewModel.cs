@@ -11,14 +11,11 @@ namespace Desktop.ViewModels;
 
 public partial class ProductsViewModel : ViewModelBase
 {
-    [ObservableProperty]
-    private ObservableCollection<Product> _products = new();
+    [ObservableProperty] private ObservableCollection<Product> _products = new();
 
-    [ObservableProperty]
-    private Product? _selectedProduct;
+    [ObservableProperty] private Product? _selectedProduct;
 
-    [ObservableProperty]
-    private ObservableCollection<Category> _categories = new();
+    [ObservableProperty] private ObservableCollection<Category> _categories = new();
 
     public ProductsViewModel() => _ = LoadAsync();
 
@@ -34,14 +31,14 @@ public partial class ProductsViewModel : ViewModelBase
     private async Task AddAsync()
     {
         if (Categories.Count == 0)
-            return; 
+            return;
 
-        var product = new Product 
-        { 
-            Name = "",                
-            CurrentPrice = 0, 
-            StockQuantity = 0, 
-            CategoryId = Categories.First().CategoryId 
+        var product = new Product
+        {
+            Name = "",
+            CurrentPrice = 0,
+            StockQuantity = 0,
+            CategoryId = Categories.First().CategoryId
         };
         await DatabaseService.Instance.AddProductAsync(product);
         Products.Add(product);

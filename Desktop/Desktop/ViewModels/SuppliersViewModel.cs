@@ -9,10 +9,8 @@ namespace Desktop.ViewModels;
 
 public partial class SuppliersViewModel : ViewModelBase
 {
-    [ObservableProperty]
-    private ObservableCollection<Supplier> _suppliers = new();
-    [ObservableProperty]
-    private Supplier? _selectedSupplier;
+    [ObservableProperty] private ObservableCollection<Supplier> _suppliers = new();
+    [ObservableProperty] private Supplier? _selectedSupplier;
 
     public SuppliersViewModel() => _ = LoadAsync();
 
