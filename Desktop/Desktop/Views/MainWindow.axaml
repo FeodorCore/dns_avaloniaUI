@@ -11,7 +11,6 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
     <Grid ColumnDefinitions="260, *">
-        <!-- Left side menu -->
         <Border Grid.Column="0" Background="#FFFFFF" BorderBrush="#E9ECEF" BorderThickness="0,0,1,0">
             <StackPanel>
                 <Image Source="/Assets/dns.png" HorizontalAlignment="Center" Margin="30"/>
@@ -34,8 +33,7 @@
                 </ListBox>
             </StackPanel>
         </Border>
-
-        <!-- Main area -->
+        
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

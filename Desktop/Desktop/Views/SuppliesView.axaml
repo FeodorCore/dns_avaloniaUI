@@ -4,7 +4,6 @@
              x:Class="Desktop.Views.SuppliesView"
              x:DataType="vm:SuppliesViewModel">
   <StackPanel Spacing="20">
-    <!-- Header -->
     <Border Background="#FFFFFF" CornerRadius="12" BorderBrush="#E9ECEF" BorderThickness="1" Padding="20">
       <StackPanel Orientation="Horizontal" Spacing="20" VerticalAlignment="Center">
         <TextBlock Text="Поставка (новая)" FontSize="18" FontWeight="600" Foreground="#ff9519" VerticalAlignment="Center"/>
@@ -24,7 +23,6 @@
       </StackPanel>
     </Border>
     
-    <!-- Items list -->
     <Border Background="#FFFFFF" CornerRadius="12" BorderBrush="#E9ECEF" BorderThickness="1" Padding="20">
       <StackPanel Spacing="16">
         <Grid ColumnDefinitions="*, 80, 100, 90" Margin="0,0,0,8">
@@ -55,20 +53,17 @@
           </ListBox.ItemTemplate>
         </ListBox>
         
-        <!-- Totals -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="12" Margin="0,8,0,0">
           <TextBlock Text="Итого по поставке:" FontWeight="600" Foreground="#344054"/>
           <TextBlock Text="{Binding OverallTotal, StringFormat={}{0:F2} ₽}" FontWeight="700" FontSize="20" Foreground="#ff9519"/>
         </StackPanel>
         
-        <!-- Buttons -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12" Margin="0,12,0,0">
           <Button Content="Добавить позицию" Command="{Binding AddItemCommand}"/>
           <Button Content="Удалить позицию" Command="{Binding DeleteItemCommand}" CommandParameter="{Binding SelectedItem, ElementName=itemsList}"/>
           <Button Content="Сохранить поставку" Command="{Binding SaveSupplyCommand}" Classes="Primary" Width="180"/>
         </StackPanel>
-
-        <!-- Отображение ошибки -->
+        
         <TextBlock Text="{Binding ErrorMessage}" 
                    Foreground="#D83B01" 
                    FontWeight="500" 

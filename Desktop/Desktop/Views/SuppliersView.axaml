@@ -4,19 +4,17 @@
              x:Class="Desktop.Views.SuppliersView"
              x:DataType="vm:SuppliersViewModel">
     <Grid ColumnDefinitions="320, *" ColumnSpacing="24">
-        <!-- Левая часть: Список поставщиков -->
+       
         <Border Grid.Column="0" Background="#FFFFFF" CornerRadius="12" BorderBrush="#E9ECEF" BorderThickness="1" Padding="16">
             <ListBox ItemsSource="{Binding Suppliers}"
                      SelectedItem="{Binding SelectedSupplier, Mode=TwoWay}"
                      DisplayMemberBinding="{Binding Name}"/>
         </Border>
         
-        <!-- Правая часть: Форма редактирования -->
         <Border Grid.Column="1" Background="#FFFFFF" CornerRadius="12" BorderBrush="#E9ECEF" BorderThickness="1" Padding="24">
             <StackPanel Spacing="18">
                 <TextBlock Classes="Header" Text="Редактирование поставщика"/>
                 
-                <!-- Все поля ввода блокируются одним свойством IsEnabled -->
                 <StackPanel Spacing="18" IsEnabled="{Binding SelectedSupplier, Converter={x:Static ObjectConverters.IsNotNull}}">
                     <StackPanel>
                         <TextBlock Classes="Label" Text="Название"/>
@@ -32,7 +30,6 @@
                     </StackPanel>
                 </StackPanel>
                 
-                <!-- Кнопки действий -->
                 <StackPanel Orientation="Horizontal" Spacing="12" Margin="0,24,0,0">
                     <Button Content="Добавить" Command="{Binding AddCommand}" Classes="Primary"/>
                     

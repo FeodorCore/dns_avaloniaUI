@@ -49,8 +49,7 @@
                        FontWeight="500"
                        HorizontalAlignment="Center"
                        IsVisible="{Binding ErrorMessage, Converter={x:Static ObjectConverters.IsNotNull}}" />
-
-            <!-- ========= DataGrid 1: Товары на складе ========= -->
+            
             <DataGrid AutoGenerateColumns="False"
                       IsReadOnly="True"
                       ItemsSource="{Binding StockRows}"
@@ -67,8 +66,7 @@
                     <DataGridTextColumn Header="Цена, ₽" Binding="{Binding Price, StringFormat={}{0:F2}}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
-
-            <!-- ========= DataGrid 2: Продажи по дням ========= -->
+            
             <DataGrid AutoGenerateColumns="False"
                       IsReadOnly="True"
                       ItemsSource="{Binding SalesByDayRows}"
@@ -86,8 +84,7 @@
                     <DataGridTextColumn Header="Прибыль, ₽" Binding="{Binding Profit, StringFormat={}{0:F2}}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
-
-            <!-- ========= DataGrid 3: Прибыль по товарам ========= -->
+            
             <DataGrid AutoGenerateColumns="False"
                       IsReadOnly="True"
                       ItemsSource="{Binding ProfitRows}"
@@ -105,8 +102,7 @@
                     <DataGridTextColumn Header="Прибыль, ₽" Binding="{Binding Profit, StringFormat={}{0:F2}}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
-
-            <!-- Итоги -->
+            
             <Border Background="#FFF0E0" CornerRadius="8" Padding="16"
                     IsVisible="{Binding IsStockReport, Converter={x:Static BoolConverters.Not}}">
                 <StackPanel Orientation="Horizontal" Spacing="24">
