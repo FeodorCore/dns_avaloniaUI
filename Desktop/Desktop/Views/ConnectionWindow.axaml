@@ -1,0 +1,94 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Desktop.ViewModels"
+        x:Class="Desktop.Views.ConnectionWindow"
+        x:DataType="vm:ConnectionViewModel"
+        Title="DNS Учёт — Подключение к базе данных"
+        Width="460" Height="560"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        Background="#FDF8F4">
+
+    <Design.DataContext>
+        <vm:ConnectionViewModel />
+    </Design.DataContext>
+
+    <Border Background="#FFFFFF" CornerRadius="16" Margin="24" Padding="32"
+            BorderBrush="#E9ECEF" BorderThickness="1">
+        <StackPanel Spacing="16">
+
+            <!-- Заголовок -->
+            <StackPanel Spacing="4" HorizontalAlignment="Center" Margin="0,0,0,8">
+                <TextBlock Text="🗄️ Подключение к БД"
+                           FontSize="22" FontWeight="700"
+                           Foreground="#ff9519" HorizontalAlignment="Center" />
+                <TextBlock Text="Введите параметры подключения к PostgreSQL"
+                           FontSize="13" Foreground="#667085" HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Поля ввода -->
+            <StackPanel Spacing="14">
+                <StackPanel>
+                    <TextBlock Classes="Label" Text="Хост" />
+                    <TextBox Text="{Binding Host, Mode=TwoWay}" Watermark="localhost" />
+                </StackPanel>
+
+                <Grid ColumnDefinitions="*, *" ColumnSpacing="12">
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Classes="Label" Text="Порт" />
+                        <TextBox Text="{Binding Port, Mode=TwoWay}" Watermark="5432" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Classes="Label" Text="База данных" />
+                        <TextBox Text="{Binding Database, Mode=TwoWay}" Watermark="postgres" />
+                    </StackPanel>
+                </Grid>
+
+                <StackPanel>
+                    <TextBlock Classes="Label" Text="Имя пользователя" />
+                    <TextBox Text="{Binding Username, Mode=TwoWay}" Watermark="admin" />
+                </StackPanel>
+
+                <StackPanel>
+                    <TextBlock Classes="Label" Text="Пароль" />
+                    <TextBox Text="{Binding Password, Mode=TwoWay}" Watermark="Введите пароль" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Сообщения -->
+            <Border Background="#FEF3F2" CornerRadius="8" Padding="12"
+                    IsVisible="{Binding ErrorMessage, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="#D83B01" FontWeight="500"
+                           TextWrapping="Wrap" FontSize="13" />
+            </Border>
+
+            <Border Background="#ECFDF3" CornerRadius="8" Padding="12"
+                    IsVisible="{Binding SuccessMessage, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <TextBlock Text="{Binding SuccessMessage}"
+                           Foreground="#107C10" FontWeight="500"
+                           TextWrapping="Wrap" FontSize="13" />
+            </Border>
+
+            <!-- Индикатор загрузки -->
+            <ProgressBar IsIndeterminate="True"
+                         IsVisible="{Binding IsConnecting}"
+                         Height="4" Margin="0,4,0,0" />
+
+            <!-- Кнопки -->
+            <StackPanel Orientation="Horizontal" Spacing="12"
+                        HorizontalAlignment="Center" Margin="0,8,0,0">
+                <Button Content="Проверить"
+                        Command="{Binding TestConnectionCommand}"
+                        Width="150"
+                        IsEnabled="{Binding !IsConnecting}" />
+                <Button Content="Подключиться"
+                        Command="{Binding ConnectCommand}"
+                        Classes="Primary"
+                        Width="180"
+                        IsEnabled="{Binding !IsConnecting}" />
+            </StackPanel>
+
+        </StackPanel>
+    </Border>
+</Window>

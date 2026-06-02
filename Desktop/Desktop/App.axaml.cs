@@ -1,8 +1,6 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
-using Avalonia.Data.Core.Plugins;
-using System.Linq;
 using Avalonia.Markup.Xaml;
 using Desktop.ViewModels;
 using Desktop.Views;
@@ -20,11 +18,44 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
+            // Меняем режим закрытия, чтобы приложение не закрывалось
+            // при закрытии окна подключения до открытия главного окна
+            desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+            var connectionVm = new ConnectionViewModel();
+            var connectionWindow = new ConnectionWindow
             {
-                DataContext = new MainWindowViewModel(),
+                DataContext = connectionVm
             };
+
+            // При успешном подключении — открываем MainWindow
+            connectionVm.ConnectionSucceeded += () =>
+            {
+                connectionWindow.Close();
+
+                var mainWindow = new MainWindow
+                {
+                    DataContext = new MainWindowViewModel(),
+                };
+                desktop.MainWindow = mainWindow;
+                mainWindow.Show();
+
+                // Теперь приложение закрывается при закрытии главного окна
+                desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            };
+
+            // Если пользователь закрыл окно подключения без подключения — выходим
+            connectionWindow.Closed += (_, _) =>
+            {
+                if (!connectionVm.IsConnected)
+                {
+                    desktop.Shutdown();
+                }
+            };
+
+            connectionWindow.Show();
         }
+
         base.OnFrameworkInitializationCompleted();
     }
 }
